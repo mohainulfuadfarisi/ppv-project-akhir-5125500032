@@ -330,6 +330,7 @@ taskForm.addEventListener("submit", event => {
     taskList.classList.remove("hidden");
     submitBtn.disabled = false;
     formMessage.textContent = "Tugas berhasil ditambahkan.";
+    window.TugasKuUI?.toast("Tugas berhasil ditambahkan.");
     formMessage.style.color = "#78e6a0";
     renderAll(newTask.id);
   }, 300);

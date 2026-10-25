@@ -386,3 +386,27 @@ footer { text-align: center; color: var(--muted); font-size: 13px; padding: 20px
   align-items: center;
   gap: 8px;
 }
+
+
+/* Tema Bootstrap TugasKu */
+:root {
+  --bs-card-bg: #ffffff;
+  --bs-card-color: #263238;
+  --bs-card-border-color: #e3e8ee;
+  --bs-toast-bg: #263238;
+  --bs-toast-color: #ffffff;
+  --bs-navbar-color: #263238;
+}
+
+/* Bootstrap Card tetap mengikuti desain TugasKu */
+.stat-card.card {
+  color: var(--bs-card-color);
+  background-color: var(--bs-card-bg);
+  border-color: var(--bs-card-border-color);
+  border-radius: 16px;
+}
+
+/* Navbar memakai warna tema */
+.main-nav.navbar {
+  color: var(--bs-navbar-color);
+}
