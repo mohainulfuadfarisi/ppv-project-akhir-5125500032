@@ -1,10 +1,5 @@
-import {
-  filterTasks,
-  getTaskStats,
-  formatDate,
-  priorityClass,
-  escapeHtml
-} from "./tugas.js";
+import { filterTasks, getTaskStats } from "./tugas.js";
+import { KartuTugas } from "./komponen.js";
 
 function motionAllowed() {
   return !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -71,28 +66,21 @@ export function renderDashboard(tasks, dom) {
   dom.progressFill.style.width = percent + "%";
   dom.progressBar.setAttribute("aria-valuenow", String(percent));
 
+  dom.dashboardTaskList.replaceChildren();
+
   if (tasks.length === 0) {
-    dom.dashboardTaskList.innerHTML =
-      '<p class="empty-inline">Belum ada tugas. Buka Kelola Tugas untuk menambahkan tugas pertamamu.</p>';
+    const kosong = document.createElement("p");
+    kosong.className = "empty-inline";
+    kosong.textContent =
+      "Belum ada tugas. Buka Kelola Tugas untuk menambahkan tugas pertamamu.";
+    dom.dashboardTaskList.appendChild(kosong);
     return;
   }
 
   const latestTasks = [...tasks].sort((a, b) => b.id - a.id).slice(0, 3);
-  dom.dashboardTaskList.innerHTML = latestTasks
-    .map(
-      task => `
-    <article class="dashboard-task">
-      <div>
-        <strong>${escapeHtml(task.name)}</strong>
-        <small>${escapeHtml(task.course)} · Deadline: ${formatDate(task.deadline)}</small>
-      </div>
-      <span class="status-pill ${task.completed ? "done" : ""}">
-        ${task.completed ? "Selesai" : "Belum selesai"}
-      </span>
-    </article>
-  `
-    )
-    .join("");
+  latestTasks.forEach(task => {
+    dom.dashboardTaskList.appendChild(KartuTugas(task, { ringkas: true }));
+  });
 }
 
 export function renderTasks(tasks, dom, animateTaskId = null) {
@@ -100,7 +88,7 @@ export function renderTasks(tasks, dom, animateTaskId = null) {
   const filter = dom.filterPriority.value;
   const filtered = filterTasks(tasks, search, filter);
 
-  dom.taskList.innerHTML = "";
+  dom.taskList.replaceChildren();
 
   if (filtered.length === 0) {
     dom.emptyState.classList.remove("hidden");
@@ -115,24 +103,7 @@ export function renderTasks(tasks, dom, animateTaskId = null) {
   }
 
   filtered.forEach(task => {
-    const article = document.createElement("article");
-    article.className = "task-item" + (task.completed ? " completed" : "");
-    article.innerHTML = `
-      <div class="task-main">
-        <h3 class="${task.completed ? "done-title" : ""}">
-          ${escapeHtml(task.name)}
-          <span class="badge ${priorityClass(task.priority)}">${escapeHtml(task.priority)}</span>
-        </h3>
-        <p>${escapeHtml(task.course)} • Deadline: ${formatDate(task.deadline)}</p>
-        <p>Status: ${task.completed ? "Selesai" : "Belum selesai"}</p>
-      </div>
-      <div class="task-actions">
-        <button type="button" data-action="toggle" data-id="${task.id}">
-          ${task.completed ? "Batalkan selesai" : "Tandai selesai"}
-        </button>
-        <button type="button" class="delete" data-action="delete" data-id="${task.id}">Hapus</button>
-      </div>
-    `;
+    const article = KartuTugas(task, { ringkas: false });
     dom.taskList.appendChild(article);
 
     if (animateTaskId !== null && task.id === animateTaskId) {
