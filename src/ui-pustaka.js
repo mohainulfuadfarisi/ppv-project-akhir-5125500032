@@ -1,18 +1,19 @@
+export function showToast(message) {
+  const element = document.getElementById("tugaskuToast");
+  const messageElement = document.getElementById("tugaskuToastMessage");
 
-/* Satu tempat untuk API JavaScript Bootstrap */
-window.TugasKuUI = {
-  toast(message) {
-    const element = document.getElementById("tugaskuToast");
-    const messageElement = document.getElementById("tugaskuToastMessage");
-
-    if (!element || !messageElement || !window.bootstrap) {
-      console.info(message);
-      return;
-    }
-
-    messageElement.textContent = message;
-
-    const toast = window.bootstrap.Toast.getOrCreateInstance(element);
-    toast.show();
+  if (!element || !messageElement || !window.bootstrap) {
+    console.info(message);
+    return;
   }
-};
+
+  messageElement.textContent = message;
+  const toast = window.bootstrap.Toast.getOrCreateInstance(element);
+  toast.show();
+}
+
+export function initIcons() {
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+}
