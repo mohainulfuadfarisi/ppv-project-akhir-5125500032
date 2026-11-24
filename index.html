@@ -6,10 +6,10 @@
   <meta name="description" content="TugasKu membantu mahasiswa mengelola tugas kuliah dan deadline.">
   <title>TugasKu — Pengelola Tugas Kuliah</title>
   <link
-  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-  rel="stylesheet">
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <script src="main.js" defer></script>
+  <script type="module" src="main.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
@@ -49,43 +49,41 @@
         </div>
 
         <div class="dashboard-illustration">
-  <img
-    src="assets/image.jpg"
-    alt="Ilustrasi meja belajar untuk mengelola tugas"
-  />
-  <div class="illustration-caption">
-    <h3>Atur tugasmu, capai tujuanmu!</h3>
-    <p>Mulai dari satu tugas kecil hari ini.</p>
-  </div>
-</div>
+          <img
+            src="assets/ilustrasi-meja-belajar.jpg"
+            alt="Ilustrasi meja belajar untuk mengelola tugas"
+          />
+          <div class="illustration-caption">
+            <h3>Atur tugasmu, capai tujuanmu!</h3>
+            <p>Mulai dari satu tugas kecil hari ini.</p>
+          </div>
+        </div>
 
-        
-<div class="stats-grid">
-  <article class="stat-card card">
-    <div class="card-body">
-      <span class="stat-label">Total tugas</span>
-      <strong id="totalCount">0</strong>
-      <span class="stat-note">Semua tugas yang tercatat</span>
-    </div>
-  </article>
+        <div class="stats-grid">
+          <article class="stat-card card">
+            <div class="card-body">
+              <span class="stat-label">Total tugas</span>
+              <strong id="totalCount">0</strong>
+              <span class="stat-note">Semua tugas yang tercatat</span>
+            </div>
+          </article>
 
-  <article class="stat-card card">
-    <div class="card-body">
-      <span class="stat-label">Tugas selesai</span>
-      <strong id="doneCount">0</strong>
-      <span class="stat-note">Tugas yang sudah diselesaikan</span>
-    </div>
-  </article>
+          <article class="stat-card card">
+            <div class="card-body">
+              <span class="stat-label">Tugas selesai</span>
+              <strong id="doneCount">0</strong>
+              <span class="stat-note">Tugas yang sudah diselesaikan</span>
+            </div>
+          </article>
 
-  <article class="stat-card card">
-    <div class="card-body">
-      <span class="stat-label">Belum selesai</span>
-      <strong id="pendingCount">0</strong>
-      <span class="stat-note">Tugas yang masih perlu dikerjakan</span>
-    </div>
-  </article>
-</div>
-
+          <article class="stat-card card">
+            <div class="card-body">
+              <span class="stat-label">Belum selesai</span>
+              <strong id="pendingCount">0</strong>
+              <span class="stat-note">Tugas yang masih perlu dikerjakan</span>
+            </div>
+          </article>
+        </div>
 
         <section class="card progress-card" aria-labelledby="progressTitle">
           <div class="section-heading">
@@ -230,28 +228,27 @@
     </footer>
   </div>
 
-  
-<div class="toast-container position-fixed bottom-0 end-0 p-3">
-  <div
-    id="tugaskuToast"
-    class="toast text-bg-dark border-secondary"
-    role="status"
-    aria-live="polite"
-    aria-atomic="true"
-  >
-    <div class="d-flex">
-      <div id="tugaskuToastMessage" class="toast-body">
-        Tugas berhasil diperbarui.
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div
+      id="tugaskuToast"
+      class="toast text-bg-dark border-secondary"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    >
+      <div class="d-flex">
+        <div id="tugaskuToastMessage" class="toast-body">
+          Tugas berhasil diperbarui.
+        </div>
+        <button
+          type="button"
+          class="btn-close btn-close-white me-2 m-auto"
+          data-bs-dismiss="toast"
+          aria-label="Tutup"
+        ></button>
       </div>
-      <button
-        type="button"
-        class="btn-close btn-close-white me-2 m-auto"
-        data-bs-dismiss="toast"
-        aria-label="Tutup"
-      ></button>
     </div>
   </div>
-</div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="src/ui-pustaka.js"></script>

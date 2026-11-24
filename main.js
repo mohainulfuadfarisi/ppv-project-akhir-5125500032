@@ -318,11 +318,17 @@ clearBtn.addEventListener("click", () => {
   formMessage.style.color = "#a7b5cc";
 });
 
-searchInput.addEventListener("input", renderTasks);
-filterPriority.addEventListener("change", renderTasks);
+searchInput.addEventListener("input", () => renderAll());
+filterPriority.addEventListener("change", () => renderAll());
 
 taskName.addEventListener("input", () => {
   if (taskName.value.trim().length >= 3) showError("taskNameError", "");
+});
+
+[taskName, course, deadline, priority].forEach(el => {
+  el.addEventListener("input", () => {
+    formMessage.textContent = "";
+  });
 });
 
 document.addEventListener("keydown", event => {
