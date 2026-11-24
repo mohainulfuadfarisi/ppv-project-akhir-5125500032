@@ -1,3 +1,16 @@
+import { loadTasks, saveTasks } from "./src/penyimpanan.js";
+
+import {
+  createTask,
+  filterTasks,
+  getTaskStats,
+  toggleTask,
+  deleteTask,
+  formatDate,
+  priorityClass,
+  escapeHtml
+} from "./src/tugas.js";
+
 const taskForm = document.getElementById("taskForm");
 const taskName = document.getElementById("taskName");
 const course = document.getElementById("course");
@@ -18,17 +31,7 @@ const progressBar = document.getElementById("progressBar");
 const progressFill = document.getElementById("progressFill");
 const dashboardTaskList = document.getElementById("dashboardTaskList");
 
-let tasks = [];
-try {
-  tasks = JSON.parse(localStorage.getItem("taskmate_tasks") || "[]");
-  if (!Array.isArray(tasks)) tasks = [];
-} catch (error) {
-  tasks = [];
-}
-
-function saveTasks() {
-  localStorage.setItem("taskmate_tasks", JSON.stringify(tasks));
-}
+let tasks = loadTasks();
 
 // Mengecek apakah pengguna memilih mengurangi gerakan animasi.
 function motionAllowed() {
@@ -166,33 +169,9 @@ function validateForm() {
   return valid;
 }
 
-function formatDate(dateString) {
-  return new Intl.DateTimeFormat("id-ID", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric"
-  }).format(new Date(dateString + "T00:00:00"));
-}
-
-function priorityClass(value) {
-  if (value === "Tinggi") return "badge-high";
-  if (value === "Sedang") return "badge-medium";
-  return "badge-low";
-}
-
-function escapeHtml(text) {
-  return String(text).replace(/[&<>"']/g, char => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;",
-    '"': "&quot;", "'": "&#039;"
-  }[char]));
-}
-
 /* Memperbarui ringkasan Dashboard */
 function renderDashboard() {
-  const total = tasks.length;
-  const done = tasks.filter(task => task.completed).length;
-  const pending = total - done;
-  const percent = total === 0 ? 0 : Math.round((done / total) * 100);
+  const { total, done, pending, percent } = getTaskStats(tasks);
 
   totalCount.textContent = total;
   doneCount.textContent = done;
@@ -226,14 +205,11 @@ function renderTasks(animateTaskId = null) {
   const search = searchInput.value.trim().toLowerCase();
   const filter = filterPriority.value;
 
-  const filtered = tasks.filter(task => {
-    const matchesSearch =
-      task.name.toLowerCase().includes(search) ||
-      task.course.toLowerCase().includes(search);
-    const matchesPriority =
-      filter === "Semua" || task.priority === filter;
-    return matchesSearch && matchesPriority;
-  });
+  const filtered = filterTasks(
+    tasks,
+    search,
+    filter
+  );
 
   taskList.innerHTML = "";
 
@@ -269,26 +245,27 @@ function renderTasks(animateTaskId = null) {
       </div>
     `;
     taskList.appendChild(article);
+
     // ANIMASI 2: animasikan hanya kartu tugas yang baru ditambahkan.
-if (
-  animateTaskId !== null &&
-  task.id === animateTaskId
-) {
-  animateElement(
-    article,
-    [
-      {
-        opacity: 0,
-        transform: "translateY(10px)"
-      },
-      {
-        opacity: 1,
-        transform: "translateY(0)"
-      }
-    ],
-    260
-  );
-}
+    if (
+      animateTaskId !== null &&
+      task.id === animateTaskId
+    ) {
+      animateElement(
+        article,
+        [
+          {
+            opacity: 0,
+            transform: "translateY(10px)"
+          },
+          {
+            opacity: 1,
+            transform: "translateY(0)"
+          }
+        ],
+        260
+      );
+    }
   });
 }
 
@@ -306,14 +283,12 @@ taskForm.addEventListener("submit", event => {
     return;
   }
 
-  const newTask = {
-    id: Date.now(),
-    name: taskName.value.trim(),
-    course: course.value.trim(),
+  const newTask = createTask({
+    name: taskName.value,
+    course: course.value,
     deadline: deadline.value,
-    priority: priority.value,
-    completed: false
-  };
+    priority: priority.value
+  });
 
   loadingState.classList.remove("hidden");
   taskList.classList.add("hidden");
@@ -322,7 +297,7 @@ taskForm.addEventListener("submit", event => {
 
   setTimeout(() => {
     tasks.push(newTask);
-    saveTasks();
+    saveTasks(tasks);
     taskForm.reset();
     clearErrors();
 
@@ -365,13 +340,12 @@ taskList.addEventListener("click", event => {
   const action = button.dataset.action;
 
   if (action === "toggle") {
-    const task = tasks.find(item => item.id === id);
-    if (task) task.completed = !task.completed;
+    tasks = toggleTask(tasks, id);
   } else if (action === "delete") {
-    tasks = tasks.filter(item => item.id !== id);
+    tasks = deleteTask(tasks, id);
   }
 
-  saveTasks();
+  saveTasks(tasks);
   renderAll();
 });
 
